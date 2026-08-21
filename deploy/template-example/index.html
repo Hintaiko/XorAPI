@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>极简模板 - XorAPI</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: system-ui, -apple-system, "PingFang SC", sans-serif; background: #0f172a; color: #e2e8f0; }
+    header { text-align: center; padding: 64px 16px 32px; }
+    header h1 { font-size: 32px; }
+    header p { color: #94a3b8; margin-top: 8px; }
+    .grid { max-width: 1000px; margin: 0 auto; padding: 0 16px 64px; display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+    .card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; }
+    .card h3 { font-size: 16px; }
+    .card .name { font-family: ui-monospace, monospace; font-size: 12px; color: #64748b; margin-top: 2px; }
+    .card .desc { font-size: 13px; color: #94a3b8; margin-top: 8px; }
+    .card .price { font-size: 12px; color: #818cf8; margin-top: 12px; }
+    .empty { text-align: center; color: #64748b; padding: 48px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>模型广场</h1>
+    <p id="note">一个 Key，调用所有大模型</p>
+  </header>
+  <div class="grid" id="models"><div class="empty">加载中...</div></div>
+
+  <script>
+    // 模板数据获取示例：同源调用后端公开接口
+    fetch('/api/square/models').then(r => r.json()).then(res => {
+      const list = (res.data && res.data.list) || []
+      const el = document.getElementById('models')
+      if (res.data && res.data.exchange_note) document.getElementById('note').textContent = res.data.exchange_note
+      if (!list.length) { el.innerHTML = '<div class="empty">暂无公开模型</div>'; return }
+      el.innerHTML = list.map(m => `
+        <div class="card">
+          <h3>${m.display_name || m.name}</h3>
+          <div class="name">${m.name}</div>
+          <div class="desc">${m.description || ''}</div>
+          <div class="price">${m.billing_type === 'token'
+            ? '输入 ' + m.input_price + ' / 输出 ' + m.output_price + ' 点/百万Token'
+            : m.per_call_price + ' 点/次'} · ${m.group_name || ''}</div>
+        </div>`).join('')
+    }).catch(() => {
+      document.getElementById('models').innerHTML = '<div class="empty">加载失败，请刷新重试</div>'
+    })
+  </script>
+</body>
+</html>

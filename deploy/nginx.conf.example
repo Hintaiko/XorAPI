@@ -1,0 +1,54 @@
+server {
+    listen 80;
+    server_name your-domain.com;
+
+    # 关键：允许带下划线的 header（如 api_key）
+    underscores_in_headers on;
+
+    client_max_body_size 64m;
+
+    location / {
+        proxy_pass http://127.0.0.1:8080;
+        proxy_http_version 1.1;
+
+        # WebSocket 与长连接支持
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # SSE 流式响应优化（AI 对话必需）
+        proxy_buffering off;
+        proxy_cache off;
+        chunked_transfer_encoding on;
+
+        # 长超时（大模型生成可能耗时数分钟）
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 600s;
+        proxy_read_timeout 600s;
+    }
+}
+
+# 可选：HTTPS（推荐生产环境启用）
+# server {
+#     listen 443 ssl http2;
+#     server_name your-domain.com;
+#     ssl_certificate     /etc/nginx/ssl/your-domain.com.pem;
+#     ssl_certificate_key /etc/nginx/ssl/your-domain.com.key;
+#     underscores_in_headers on;
+#     client_max_body_size 64m;
+#     location / {
+#         proxy_pass http://127.0.0.1:8080;
+#         proxy_http_version 1.1;
+#         proxy_set_header Upgrade $http_upgrade;
+#         proxy_set_header Connection "upgrade";
+#         proxy_set_header Host $host;
+#         proxy_set_header X-Real-IP $remote_addr;
+#         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#         proxy_buffering off;
+#         proxy_read_timeout 600s;
+#     }
+# }

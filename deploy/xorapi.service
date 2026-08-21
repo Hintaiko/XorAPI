@@ -1,0 +1,15 @@
+[Unit]
+Description=XorAPI AI Gateway
+After=network.target mysql.service redis.service
+
+[Service]
+Type=simple
+User=www
+WorkingDirectory=/opt/xorapi
+ExecStart=/opt/xorapi/xorapi -c /opt/xorapi/config.yaml
+Restart=always
+RestartSec=5
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target

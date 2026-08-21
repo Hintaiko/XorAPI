@@ -1,22 +1,29 @@
-# 运行时数据与本地配置
+# 运行时数据与本地配置（含密钥，严禁提交）
+data/
 config.yaml
 *.log
+*.lock.tmp
 
-data/
+# 构建产物（二进制通过 GitHub Releases 分发）
 release/
 backend/xorapi
 backend/xorapi.exe
 backend/config.yaml
 
+# 前端依赖与构建缓存
 frontend/node_modules/
 frontend/.vite/
 frontend/dist/
 frontend/*.local
 
+# 前端构建产物（由 build.sh 生成后嵌入，克隆后需先跑 build.sh）
 backend/internal/web/dist/*
 !backend/internal/web/dist/.gitkeep
+
+# Go
 backend/vendor/
 
+# 系统与编辑器
 .DS_Store
 Thumbs.db
 .idea/

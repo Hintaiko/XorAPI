@@ -1,0 +1,7 @@
+{
+  "name": "极简模板",
+  "slug": "minimal",
+  "version": "1.0.0",
+  "author": "XorAPI 官方示例",
+  "description": "极简单页模板，演示如何读取模型广场接口并渲染"
+}
