@@ -1,0 +1,24 @@
+# 运行时数据与本地配置
+config.yaml
+*.log
+
+data/
+release/
+backend/xorapi
+backend/xorapi.exe
+backend/config.yaml
+
+frontend/node_modules/
+frontend/.vite/
+frontend/dist/
+frontend/*.local
+
+backend/internal/web/dist/*
+!backend/internal/web/dist/.gitkeep
+backend/vendor/
+
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
